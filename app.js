@@ -9,6 +9,10 @@ var express = require('express')
   , http = require('http')
   , path = require('path');
 
+var mysql = require('mysql');
+var dbconfig = require('./conf/database.js');
+var connection = mysql.createConnection(dbconfig);
+
 var app = express();
 
 // all environments
@@ -29,6 +33,9 @@ if ('development' == app.get('env')) {
 
 app.get('/', routes.index);
 app.get('/users', user.list);
+app.get('/user/info', function(req, res){
+	user.selectUserInfo(req, res, connection);
+});
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
